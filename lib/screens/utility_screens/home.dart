@@ -8,6 +8,7 @@ import 'package:kidney_cancer_detection/screens/utility_screens/abboutus.dart';
 import 'package:kidney_cancer_detection/screens/utility_screens/background.dart';
 import 'package:kidney_cancer_detection/screens/utility_screens/contactus.dart';
 import 'package:kidney_cancer_detection/screens/utility_screens/uploadpage.dart';
+import 'package:kidney_cancer_detection/screens/utils/predict.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -18,12 +19,11 @@ class Home extends StatelessWidget {
         appBar: AppBar(),
         drawer: HomePageSources.drawer(context),
         body: background_body(
-          child: ListView.builder(
-                itemCount: 1,
-                itemBuilder: (context, index) =>
-                    HomePageSources.bodyContainer(context),
-              )
-        ));
+            child: ListView.builder(
+          itemCount: 1,
+          itemBuilder: (context, index) =>
+              HomePageSources.bodyContainer(context),
+        )));
   }
 }
 
@@ -182,7 +182,7 @@ class HomePageSources {
                   ),
 
                   cards(context, 1, "assets/kidneycancer/scan.jpg", "Scan",
-                      Icons.scanner_sharp, UploadPage()),
+                      Icons.scanner_sharp, PredictKidneyCancer()),
                   cards(context, 1, "assets/kidneycancer/doctor.jpg",
                       "Find Doctor", Icons.medical_services, DoctorListPage()),
                   Row(children: [

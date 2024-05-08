@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kidney_cancer_detection/firebase/firebase_auth.dart';
 import 'package:kidney_cancer_detection/screens/auth_screens/signin.dart';
 import 'package:kidney_cancer_detection/screens/auth_screens/signup.dart';
+import 'package:kidney_cancer_detection/screens/utility_screens/flashMessage.dart';
 import 'package:kidney_cancer_detection/screens/utility_screens/home.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -13,14 +14,13 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
-  void initState() async {
+  void initState() {
     checkAuthentication();
     super.initState();
   }
 
   void checkAuthentication() async {
-    FirebaseAuthentication firebaseAuthentication = FirebaseAuthentication();
-    bool isAuth = await firebaseAuthentication.isAutherized();
+    bool isAuth = await FirebaseAuthentication.isAutherized();
     if (isAuth) {
       Navigator.pushReplacement(
         context,

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "138637740287",
-    "project_id": "kidney-cancer-detection",
-    "storage_bucket": "kidney-cancer-detection.appspot.com"
+    "project_number": "499743383793",
+    "project_id": "kidneycancerdetection",
+    "storage_bucket": "kidneycancerdetection.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:138637740287:android:a982bd56640ec2d162a4ca",
+        "mobilesdk_app_id": "1:499743383793:android:aec965dcb3b4bac1b64950",
         "android_client_info": {
           "package_name": "com.example.kidney_cancer_detection"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDs2VEVNYfI5vFU1Mg5c545O-Sqo4fq6us"
+          "current_key": "AIzaSyCQyYsa6ay49Znta33b_fjMdvX3RuSXH6I"
         }
       ],
       "services": {
