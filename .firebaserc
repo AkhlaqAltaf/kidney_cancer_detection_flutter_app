@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "testing": "kidneycancerdetection"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

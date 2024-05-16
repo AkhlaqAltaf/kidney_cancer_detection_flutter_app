@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-import 'package:tflite_flutter/tflite_flutter.dart';
+
+import 'package:kidney_cancer_detection/apis/predict_api.dart';
 
 class PredictKidneyCancer extends StatefulWidget {
   @override
@@ -9,80 +10,16 @@ class PredictKidneyCancer extends StatefulWidget {
 }
 
 class _PredictKidneyCancerState extends State<PredictKidneyCancer> {
-  File? _image;
+  File? _file;
   List<dynamic>? _output;
   bool _loading = false;
 
   @override
   void initState() {
     super.initState();
-    _loading = true;
-    loadModel().then((value) {
-      print("MODEL LOADED SUCCESS FULLY ");
-      setState(() {
-        _loading = false;
-      });
-    });
   }
 
-  @override
-  void dispose() {
-    Tflite.close();
-    super.dispose();
-  }
-
-  Future<void> loadModel() async {
-    try {
-      String? res = await Tflite.loadModel(
-        model: 'assets/model/model.tflite',
-        labels: 'assets/model/dict.txt',
-      );
-      print(res);
-    } on Exception catch (e) {
-      print('Failed to load model: $e');
-    }
-  }
-
-  bool _inferenceInProgress = false;
-
-  Future<void> getImage() async {
-    if (_inferenceInProgress)
-      return; // Return if inference is already in progress
-    _inferenceInProgress = true; // Set flag to indicate inference in progress
-
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    print("IMAGE FILE IS HERE : ::::::::  $pickedFile");
-    setState(() {
-      _image = File(pickedFile!.path);
-    });
-    await runModelOnImage();
-    _inferenceInProgress = false;
-  }
-
-  Future<void> runModelOnImage() async {
-    if (_image == null) return;
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      var output = await Tflite.runModelOnImage(
-        path: _image!.path,
-        numResults: 3,
-        threshold: 0.5,
-        imageMean: 127.5,
-        imageStd: 127.5,
-      );
-      setState(() {
-        _loading = false;
-        _output = output;
-      });
-    } on Exception catch (e) {
-      print('Failed to run model on image: $e');
-    }
-  }
-
+  ////////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,13 +27,19 @@ class _PredictKidneyCancerState extends State<PredictKidneyCancer> {
         title: Text('Predict Kidney Cancer'),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _image == null
-              ? const Center(child: Text('No image selected'))
+          ? Center(child: CircularProgressIndicator())
+          : _file == null
+              ? Center(child: Text('No file selected'))
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image.file(_image!),
+                    // Depending on the type of file, you can display it differently
+                    if (_file!.path.endsWith('.jpg') ||
+                        _file!.path.endsWith('.jpeg') ||
+                        _file!.path.endsWith('.png'))
+                      Image.file(_file!)
+                    else
+                      Text('Selected file: ${_file!.path}'),
                     const SizedBox(height: 20),
                     _output != null
                         ? Column(
@@ -129,10 +72,28 @@ class _PredictKidneyCancerState extends State<PredictKidneyCancer> {
                   ],
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: getImage,
-        tooltip: 'Select Image',
-        child: Icon(Icons.image),
+        onPressed: getFile,
+        tooltip: 'Select File',
+        child: Icon(Icons.file_upload),
       ),
     );
+  }
+
+  bool _inferenceInProgress = false;
+
+  Future<void> getFile() async {
+    if (_inferenceInProgress) return;
+    _inferenceInProgress = true;
+
+    final FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      setState(() {
+        _file = File(result.files.single.path!);
+      });
+      await fetchPrediction(context, _file!);
+    }
+
+    _inferenceInProgress = false;
   }
 }

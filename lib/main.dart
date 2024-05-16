@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kidney_cancer_detection/providers/authProvider.dart';
+import 'package:kidney_cancer_detection/providers/doctor_provider.dart';
 import 'package:kidney_cancer_detection/screens/utility_screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -23,7 +24,11 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(
             create: (context) => AuthentcationProvider(),
+            
           ),
+
+          ChangeNotifierProvider(
+            create: (context) => DoctorProvider(),)
         ],
         builder: (context, child) => MaterialApp(
               debugShowCheckedModeBanner: false,
