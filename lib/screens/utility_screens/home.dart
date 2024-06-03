@@ -4,10 +4,12 @@ import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/position/gf_position.dart';
 import 'package:kidney_cancer_detection/apis/predict_api.dart';
+import 'package:kidney_cancer_detection/firebase/token_store.dart';
 import 'package:kidney_cancer_detection/screens/doctor_screen/doctor_list.dart';
 import 'package:kidney_cancer_detection/screens/utility_screens/abboutus.dart';
 import 'package:kidney_cancer_detection/screens/utility_screens/background.dart';
 import 'package:kidney_cancer_detection/screens/utility_screens/contactus.dart';
+import 'package:kidney_cancer_detection/screens/utility_screens/welcome_screen.dart';
 import 'package:kidney_cancer_detection/screens/utils/predict.dart';
 
 class Home extends StatelessWidget {
@@ -131,7 +133,15 @@ class HomePageSources {
                       ),
                       TextButton(
                         child: const Text('Logout'),
-                        onPressed: () {},
+                        onPressed: () {
+                          clearData();
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WelcomeScreen(),
+                              ));
+                        },
                       ),
                     ],
                   );

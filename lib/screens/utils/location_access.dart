@@ -1,35 +1,46 @@
 import 'package:location/location.dart';
+import 'dart:math';
 
-void location() async {
+Future<LocationData> getCurrentLocation() async {
   Location location = Location();
 
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
+  bool serviceEnabled;
+  PermissionStatus permissionGranted;
+  LocationData locationData;
 
-  _permissionGranted = await location.hasPermission();
-  if (_permissionGranted == PermissionStatus.denied) {
-    _permissionGranted = await location.requestPermission();
-    if (_permissionGranted != PermissionStatus.granted) {
-      // Handle the case where the user denied permission
-      return;
+  permissionGranted = await location.hasPermission();
+  if (permissionGranted == PermissionStatus.denied) {
+    permissionGranted = await location.requestPermission();
+    if (permissionGranted != PermissionStatus.granted) {
+      throw Exception("Location permission denied");
     }
   }
 
-  _serviceEnabled = await location.serviceEnabled();
-  if (!_serviceEnabled) {
-    _serviceEnabled = await location.requestService();
-    if (!_serviceEnabled) {
-      // Handle the case where location services are disabled by the user
-      return;
+  serviceEnabled = await location.serviceEnabled();
+  if (!serviceEnabled) {
+    serviceEnabled = await location.requestService();
+    if (!serviceEnabled) {
+      throw Exception("Location services are disabled");
     }
   }
 
-  _locationData = await location.getLocation();
-  double? latitude = _locationData.latitude;
-  double? longitude = _locationData.longitude;
-  print("LOCATION IS HERE ..........");
+  locationData = await location.getLocation();
+  return locationData;
+}
 
-  print(latitude);
-  print(longitude);
+double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  const R = 6371; // Radius of the Earth in kilometers
+  final dLat = _degreesToRadians(lat2 - lat1);
+  final dLon = _degreesToRadians(lon2 - lon1);
+  final a = sin(dLat / 2) * sin(dLat / 2) +
+      cos(_degreesToRadians(lat1)) *
+          cos(_degreesToRadians(lat2)) *
+          sin(dLon / 2) *
+          sin(dLon / 2);
+  final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+  return R * c;
+}
+
+double _degreesToRadians(double degrees) {
+  return degrees * pi / 180;
 }

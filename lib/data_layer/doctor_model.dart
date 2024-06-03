@@ -10,9 +10,11 @@ class DoctorFormData {
   final String long;
   final String clinic;
   final String imageUrl;
+  final String contactNumber;
+  final String completeAddress;
 
   const DoctorFormData(this.name, this.specialist, this.lat, this.long,
-      this.clinic, this.imageUrl);
+      this.clinic, this.imageUrl, this.contactNumber, this.completeAddress);
 
   Map<String, dynamic> toMap() {
     return {
@@ -21,6 +23,8 @@ class DoctorFormData {
       'lat': lat,
       'long': long,
       'clinic': clinic,
+      'contactNumber': contactNumber,
+      'completeAddress': completeAddress,
       'imageUrl': imageUrl,
     };
   }
@@ -55,6 +59,8 @@ class DoctorFormData {
       map['long'] ?? '',
       map['clinic'] ?? '',
       map['imageUrl'] ?? '',
+      map['contactNumber'] ?? '',
+      map['completeAddress'] ?? '',
     );
   }
 }

@@ -10,6 +10,8 @@ class DoctorProvider extends ChangeNotifier {
   String _long = '';
   String _clinic = '';
   String _imageUrl = '';
+  String _contactNumber = "";
+  String _completeAddress = "";
 
   bool _navigate = false;
 
@@ -21,7 +23,18 @@ class DoctorProvider extends ChangeNotifier {
   String get long => _long;
   String get clinic => _clinic;
   String get imageUrl => _imageUrl;
+  String get contactNumber => _contactNumber;
+  String get completeAddress => _completeAddress;
+
   bool get navigate => _navigate;
+
+  set contactNumber(String contactNumber_) {
+    this._contactNumber = contactNumber_;
+  }
+
+  set completeAddress(String completeAddress_) {
+    this._completeAddress = completeAddress_;
+  }
 
 // SETTTER METHODS
 
@@ -57,11 +70,10 @@ class DoctorProvider extends ChangeNotifier {
   }
 
   Future register(BuildContext context) async {
-    
     print("IMAGE URL ");
     print(imageUrl);
-    DoctorFormData doctor =
-        DoctorFormData(name, specialist, lat, long, clinic, imageUrl);
+    DoctorFormData doctor = DoctorFormData(_name, _specialist, _lat, _long,
+        _clinic, _imageUrl, _contactNumber, _completeAddress);
     await saveDoctorData(doctor);
   }
 }

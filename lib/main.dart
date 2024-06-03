@@ -24,11 +24,10 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(
             create: (context) => AuthentcationProvider(),
-            
           ),
-
           ChangeNotifierProvider(
-            create: (context) => DoctorProvider(),)
+            create: (context) => DoctorProvider(),
+          )
         ],
         builder: (context, child) => MaterialApp(
               debugShowCheckedModeBanner: false,

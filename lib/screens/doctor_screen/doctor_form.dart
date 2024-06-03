@@ -17,6 +17,7 @@ class DoctorForm extends StatefulWidget {
 class _DoctorFormState extends State<DoctorForm> {
   late String _imageUrl;
   File? _image;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _DoctorFormState extends State<DoctorForm> {
     DoctorProvider provider = Provider.of<DoctorProvider>(context);
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: [
           Container(
@@ -62,7 +63,7 @@ class _DoctorFormState extends State<DoctorForm> {
             child: const Padding(
               padding: EdgeInsets.only(top: 60.0, left: 22),
               child: Text(
-                'Create Your\nAccount',
+                'Create Doctor\nAccount',
                 style: TextStyle(
                   fontSize: 30,
                   color: Colors.white,
@@ -83,152 +84,243 @@ class _DoctorFormState extends State<DoctorForm> {
               ),
               height: double.infinity,
               width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 18.0, right: 18),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextFormField(
-                      onChanged: (value) {
-                        provider.name = value;
-                      },
-                      decoration: const InputDecoration(
-                        suffixIcon: Icon(
-                          Icons.check,
-                          color: Colors.grey,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 18.0, right: 18, bottom: 20),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          onChanged: (value) {
+                            provider.name = value;
+                          },
+                          decoration: const InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.check,
+                              color: Colors.grey,
+                            ),
+                            labelText: 'Name',
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffB81736),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a name';
+                            }
+                            return null;
+                          },
                         ),
-                        labelText: 'Name',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xffB81736),
+                        TextFormField(
+                          onChanged: (value) {
+                            provider.specialist = value;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.type_specimen,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Specialization',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffB81736),
+                                ),
+                              )),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a specialization';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                    ),
-                    TextFormField(
-                      onChanged: (value) {
-                        provider.specialist = value;
-                      },
-                      decoration: const InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.type_specimen,
-                            color: Colors.grey,
-                          ),
-                          label: Text(
-                            'Specialization',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffB81736),
-                            ),
-                          )),
-                    ),
-                    TextFormField(
-                      onChanged: (value) {
-                        provider.clinic = value;
-                      },
-                      decoration: const InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.local_hospital_outlined,
-                            color: Colors.grey,
-                          ),
-                          label: Text(
-                            'Clinic Name',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffB81736),
-                            ),
-                          )),
-                    ),
-                    TextFormField(
-                      onChanged: (value) {
-                        provider.lat = value;
-                      },
-                      decoration: const InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.place,
-                            color: Colors.grey,
-                          ),
-                          label: Text(
-                            'Lat(Address)',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffB81736),
-                            ),
-                          )),
-                    ),
-                    TextFormField(
-                      onChanged: (value) {
-                        provider.long = value;
-                      },
-                      decoration: const InputDecoration(
-                          suffixIcon: Icon(
-                            Icons.place,
-                            color: Colors.grey,
-                          ),
-                          label: Text(
-                            'Long(Address)',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffB81736),
-                            ),
-                          )),
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        getImage();
-                      },
-                      child: const Text('Choose Image'),
-                    ),
-                    Text(
-                      _imageUrl.isEmpty
-                          ? 'No image selected'
-                          : 'Image: $_imageUrl',
-                    ),
-                    const SizedBox(height: 10),
-                    const SizedBox(height: 70),
-                    GestureDetector(
-                      onTap: () async {
-                        String url = await DoctorFormData.uploadImage(
-                            context, _imageUrl);
-                        provider.imageUrl = url;
+                        TextFormField(
+                          onChanged: (value) {
+                            provider.clinic = value;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.local_hospital_outlined,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Clinic Name',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffB81736),
+                                ),
+                              )),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a clinic name';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          onChanged: (value) {
+                            provider.lat = value;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.place,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Lat (Latitude)',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffB81736),
+                                ),
+                              )),
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a latitude';
+                            }
+                            if (double.tryParse(value) == null) {
+                              return 'Please enter a valid number';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          onChanged: (value) {
+                            provider.long = value;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.place,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Long (Longitude)',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffB81736),
+                                ),
+                              )),
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a longitude';
+                            }
+                            if (double.tryParse(value) == null) {
+                              return 'Please enter a valid number';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          onChanged: (value) {
+                            provider.completeAddress = value;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.home,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Complete Address',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffB81736),
+                                ),
+                              )),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a complete address';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          onChanged: (value) {
+                            provider.contactNumber = value;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.phone,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Contact Number',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xffB81736),
+                                ),
+                              )),
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a contact number';
+                            }
+                            return null;
+                          },
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            getImage();
+                          },
+                          child: const Text('Choose Image'),
+                        ),
+                        Text(
+                          _imageUrl.isEmpty
+                              ? 'No image selected'
+                              : 'Image: $_imageUrl',
+                        ),
+                        const SizedBox(height: 10),
+                        const SizedBox(height: 70),
+                        GestureDetector(
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              String url = await DoctorFormData.uploadImage(
+                                  context, _imageUrl);
+                              provider.imageUrl = url;
 
-                        if (!url.isEmpty) {
-                          await provider.register(context);
-                        }
-
-                        if (provider.navigate) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Home(),
+                              if (url.isNotEmpty) {
+                                await provider.register(context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Home(),
+                                    ));
+                              }
+                            }
+                          },
+                          child: Container(
+                            height: 55,
+                            width: 300,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xffB81736),
+                                  Color(0xff281537),
+                                ],
+                              ),
                             ),
-                          );
-                        }
-                      },
-                      child: Container(
-                        height: 55,
-                        width: 300,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xffB81736),
-                              Color(0xff281537),
-                            ],
+                            child: const Center(
+                              child: Text(
+                                'Register',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        child: const Center(
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
